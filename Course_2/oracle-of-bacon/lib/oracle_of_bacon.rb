@@ -56,8 +56,8 @@ class OracleOfBacon
     # set encode
     query = URI.encode_www_form(params)
     # set host and path
-    host = "www.google.com.br"
-    path = "/teste"
+    host = "oracleofbacon.org"
+    path = "/"
      @uri = URI::HTTP.build([nil, host, nil, path, query, nil]).to_s
   end
       
