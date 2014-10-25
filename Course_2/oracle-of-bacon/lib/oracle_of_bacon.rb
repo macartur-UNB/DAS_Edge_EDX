@@ -49,6 +49,16 @@ class OracleOfBacon
   def make_uri_from_arguments
     # your code here: set the @uri attribute to properly-escaped URI
     #   constructed from the @from, @to, @api_key arguments
+    params = {}
+    params["p"] = @api_key
+    params["a"] = @from
+    params["b"] = @to
+    # set encode
+    query = URI.encode_www_form(params)
+    # set host and path
+    host = "www.google.com.br"
+    path = "/teste"
+     @uri = URI::HTTP.build([nil, host, nil, path, query, nil]).to_s
   end
       
   class Response
