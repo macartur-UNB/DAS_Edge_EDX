@@ -40,8 +40,10 @@ class OracleOfBacon
       # convert all of these into a generic OracleOfBacon::NetworkError,
       #  but keep the original error message
       # your code here
+      raise OracleOfBacon::NetworkError
     end
     # your code here: create the OracleOfBacon::Response object
+    OracleOfBacon::Response.new(xml)
   end
 
   def make_uri_from_arguments
@@ -62,14 +64,35 @@ class OracleOfBacon
     def parse_response
       if ! @doc.xpath('/error').empty?
         parse_error_response
-      # your code here: 'elsif' clauses to handle other responses
-      # for responses not matching the 3 basic types, the Response
-      # object should have type 'unknown' and data 'unknown response'         
+      elsif !@doc.xpath('/link').empty?
+        parse_graph_response
+      elsif ! @doc.xpath('/spellcheck').empty?
+        parse_spellcheck_response
+      else
+       @type = :unknown
+       @data = 'unknown response type'
       end
     end
     def parse_error_response
       @type = :error
       @data = 'Unauthorized access'
+    end
+    def parse_graph_response
+     @type = :graph
+     actor_arr = @doc.xpath('//actor').map(&:text)
+     movie_arr = @doc.xpath('//movie').map(&:text)
+     @data = actor_arr.zip(movie_arr).flatten.compact
+     # zip:
+     #    [:a,:b,nil].zip(1,2) == [[:a,1] , [:b,2] , [:c,nil]]
+     # flatten
+     #     [[:a,1],[:b,2],[:c,nil]].flatten==[:a,1,:b,2,:c,nil]
+     # compact 
+     #     [:a,1,:c,nil].compact==[:a,1,:c]
+    end
+    def parse_spellcheck_response
+     @type = :spellcheck
+     match_arr = @doc.xpath('//match').map(&:text)
+     @data = match_arr.flatten.compact
     end
   end
 end
