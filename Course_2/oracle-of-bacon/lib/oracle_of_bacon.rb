@@ -49,16 +49,21 @@ class OracleOfBacon
   def make_uri_from_arguments
     # your code here: set the @uri attribute to properly-escaped URI
     #   constructed from the @from, @to, @api_key arguments
-    params = {}
-    params["p"] = @api_key
-    params["a"] = @from
-    params["b"] = @to
+#   params = {}
+#    params["p"] = @api_key
+#    params["a"] = @from
+#    params["b"] = @to
     # set encode
-    query = URI.encode_www_form(params)
+#    query = URI.encode_www_form(params)
     # set host and path
-    host = "oracleofbacon.org"
-    path = "/cgi-bin/xml"
-     @uri = URI::HTTP.build([nil, host, nil, path, query, nil]).to_s
+#    host = "oracleofbacon.org"
+#    path = "/cgi-bin/xml"
+#     @uri = URI::HTTP.build([nil, host, nil, path, query, nil]).to_s
+
+    # other way 
+   @uri = "http://oracleofbacon.org/cgi-bin/xml?p=#{ CGI.escape(@api_key)}&a=#{CGI.escape(@from) }&b=#{CGI.escape(@to)}"
+
+
   end
       
   class Response
